@@ -1,0 +1,26 @@
+K8S Installation and Configration
+create master instance(t2.medium)
+Step1:Clone from git
+git clone https://github.com/vishnubasuthkar/k8sinstall.git
+Step2:go to k8sinstall dir and run sh file
+sudo sh install.sh
+Step3:select the master instance and goto--> actions -->select images and templates -->create images
+provide image name and create.
+Step4:go to Amazon Machine Images (AMIs)
+select AMI image --> click launch instance from image--> select t2.micro 2 instance.
+Step5:go to master instance --> go to root user --> sudo sh -
+install (kubeadm  init)
+Step6:(execute below commands on both root and ubuntu user)Copy token and keep it in a separate file so that we need to run this command in worker nodes.
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+Step7:(execute in root user)installing a CNI network on master node
+sysctl net.bridge.bridge-nf-call-iptables=1
+kubectl apply -f "https://cloud.weave.works/k8s/v1.13/net.yaml"
+exit
+kubectl get nodes
+Step8:CREATE WORKER NODES(WORKER Instance)
+sudo su -
+1.run the kubeadm join <TOKEN> command which we get from STEP 6
+Step9:Login back to Master instance created
+sudo kubectl get nodes
